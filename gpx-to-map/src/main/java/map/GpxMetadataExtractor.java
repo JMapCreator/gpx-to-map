@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.List;
 
 public class GpxMetadataExtractor {
-    public static ExtractedGpxResult extract(List<WayPoint> wayPoints) {
+    public static ExtractedGpxResult extract(String gpxName, List<WayPoint> wayPoints) {
         Instant startTime = wayPoints.getFirst().getTime().orElse(Instant.EPOCH);
         Instant endTime = wayPoints.getLast().getTime().orElse(Instant.EPOCH);
         long elapsedSeconds = Duration.between(startTime, endTime).getSeconds();
@@ -21,6 +21,6 @@ public class GpxMetadataExtractor {
                 .reduce((integer, integer2) -> integer2 > integer ? integer + (integer2 - integer) : integer)
                 .orElse(0);
         float vitesse = (distance / 1000f) / (elapsedSeconds / 3600f);
-        return new ExtractedGpxResult(formattedDuration, distance, elevation, vitesse);
+        return new ExtractedGpxResult(gpxName, formattedDuration, distance, elevation, vitesse);
     }
 }

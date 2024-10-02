@@ -1,9 +1,9 @@
 package files;
 
+import java.io.File;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Optional;
 
 public interface GpxFileRunner {
-
-    List<ExtractedGpxResult> run(Path currentFolder, Path outputFolder);
+    Optional<ExtractedGpxResult> run(File file, Path outputFolder);
 }

@@ -1,5 +1,6 @@
 import files.DefaultGpxRunner;
 import files.ExtractedGpxResult;
+import map.DefaultGpxMapper;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,9 +8,9 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.Optional;
 
-public class DefaultRunnerIT {
+public class DefaultGpxRunnerIT {
 
     @TempDir
     Path tempDir;
@@ -21,12 +22,12 @@ public class DefaultRunnerIT {
         Path resourceDirectory = Paths.get("src","test","resources");
 
         // When the default runner uses this file
-        DefaultGpxRunner defaultGpxRunner = new DefaultGpxRunner();
-        List<ExtractedGpxResult> results = defaultGpxRunner.run(resourceDirectory, tempDir);
+        DefaultGpxRunner defaultGpxRunner = new DefaultGpxRunner(new DefaultGpxMapper());
+        Optional<ExtractedGpxResult> result = defaultGpxRunner.run(resourceDirectory.resolve("test.gpx").toFile(), tempDir);
 
         // Then a map should be generated and the infos should be returned
         SoftAssertions softly = new SoftAssertions();
-        softly.assertThat(results).hasSize(1);
+        softly.assertThat(result).isPresent();
         softly.assertAll();
     }
 }

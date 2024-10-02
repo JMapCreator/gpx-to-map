@@ -9,12 +9,17 @@ import com.hotcoffee.staticmap.layers.Padding;
 import com.hotcoffee.staticmap.layers.TMSLayer;
 import com.hotcoffee.staticmap.layers.components.LineString;
 import io.jenetics.jpx.WayPoint;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.util.List;
 
 public class StaticMapCreator {
+    public static final Logger LOGGER = LogManager.getLogger();
+
     static void drawMap(List<WayPoint> wayPoints, Graphics2D graphics2D, int width, int height) {
+        LOGGER.info("Starting to ping tile server...");
         List<Location> locationList = wayPoints.stream()
                 .map(wp -> new Location(wp.getLatitude().doubleValue(), wp.getLongitude().doubleValue()))
                 .toList();
@@ -32,5 +37,6 @@ public class StaticMapCreator {
         mp.addLayer(baseMap);
         mp.addLayer(lineString);
         mp.drawInto(graphics2D, new CenterOffset(0, 100));
+        LOGGER.info("Map infos acquired");
     }
 }

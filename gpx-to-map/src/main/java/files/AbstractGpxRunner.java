@@ -1,32 +1,32 @@
 package files;
 
-import map.GpxMapper;
+import map.IGpxMapper;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.Optional;
 
-public abstract class AbstractGpxRunner implements GpxFileRunner {
+public abstract class AbstractGpxRunner<U extends IGpxMapper> implements GpxFileRunner {
 
     public static final String GPX_EXTENSION = ".gpx";
+    public final U gpxMapper;
+
+    protected AbstractGpxRunner(U gpxMapper) {
+        this.gpxMapper = gpxMapper;
+    }
 
     @Override
-    public List<ExtractedGpxResult> run(Path currentFolder, Path outputFolder) {
-        if (currentFolder.toFile().exists()) {
-            return Stream.of(currentFolder.toFile().listFiles())
-                    .filter(file -> file.getName().endsWith(GPX_EXTENSION))
-                    .map(f -> convertToMap(f, outputFolder))
-                    .toList();
+    public Optional<ExtractedGpxResult> run(File file, Path outputFolder) {
+        if (file.getName().endsWith(GPX_EXTENSION)) {
+            return Optional.of(convertToMap(file, outputFolder));
         }
-        return Collections.emptyList();
+        return Optional.empty();
     }
 
     public ExtractedGpxResult convertToMap(File gpxFile, Path outputFolder) {
         try {
-            return GpxMapper.map(gpxFile, outputFolder);
+            return gpxMapper.map(gpxFile, outputFolder);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
