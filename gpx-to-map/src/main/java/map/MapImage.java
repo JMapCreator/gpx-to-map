@@ -18,7 +18,7 @@ public class MapImage {
         if (outputFolder != null) {
             file = outputFolder.resolve(fileName).toFile();
         } else {
-            file = new File(fileName);
+            file = new File(gpxFile.getParent(), fileName);
         }
         LOGGER.info("Writing finished image to : {}", file.getAbsolutePath());
         ImageIO.write(mImage, "PNG", file);
