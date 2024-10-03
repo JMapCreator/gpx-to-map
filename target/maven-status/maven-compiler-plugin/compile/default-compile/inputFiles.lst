@@ -1,0 +1,15 @@
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/MapsGenerator.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/files/AbstractGpxRunner.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/files/DefaultGpxRunner.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/files/ExtractedGpxResult.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/files/FileRunner.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/files/GpxFileRunner.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/files/MarkdownRunner.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/folder/GpxToMapWalker.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/map/DefaultGpxMapper.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/map/ElevationGraphCreator.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/map/GpxMetadataExtractor.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/map/GpxParser.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/map/IGpxMapper.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/map/MapImage.java
+/home/ivan/envdev/gpx-to-map/gpx-to-map/src/main/java/map/StaticMapCreator.java
