@@ -36,7 +36,7 @@ Maps are created using [this fork](https://github.com/JMapCreator/StaticMap) of 
 ### Result
 The default settings will product something similar to this :
 
-![test-composed-gr20.png](../../poc-map-generation/test-composed-gr20.png)
+![test-composed-gr20.png](doc_resource/test-image.png)
 
 ## Contributions
 If you want to contribute, please open issues, or fork the repo and open PRs. I will happily answer/review them !
