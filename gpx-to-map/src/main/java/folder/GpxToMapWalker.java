@@ -14,12 +14,19 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 
-public class PathWalker<U extends GpxFileRunner, V extends FileRunner> extends SimpleFileVisitor<Path> {
+/**
+ * This is the main class of the project. It will iterate through the given folder and generate maps from every gpx file it encounters.
+ *
+ * @param <U> a {@link GpxFileRunner} that will convert GPX to an image
+ * @param <V> a {@link FileRunner} that can apply any type of transformation in each visited folder
+ */
+public class GpxToMapWalker<U extends GpxFileRunner, V extends FileRunner> extends SimpleFileVisitor<Path> {
 
     public static final Logger LOGGER = LogManager.getLogger();
 
@@ -28,7 +35,7 @@ public class PathWalker<U extends GpxFileRunner, V extends FileRunner> extends S
     private final V postVisitRunner;
     private final Path outPutPath;
 
-    public PathWalker(Path outPutPath, U gpxFileRunner, V postVisitRunner) {
+    public GpxToMapWalker(Path outPutPath, U gpxFileRunner, V postVisitRunner) {
         this.outPutPath = outPutPath;
         this.gpxFileRunner = gpxFileRunner;
         this.postVisitRunner = postVisitRunner;
@@ -58,11 +65,11 @@ public class PathWalker<U extends GpxFileRunner, V extends FileRunner> extends S
         return super.visitFileFailed(file, exc);
     }
 
-    public static PathWalker<DefaultGpxRunner, FileRunner> getDefaultGpxPathWalker() {
-        return new PathWalker<>(null, new DefaultGpxRunner(new DefaultGpxMapper()), null);
+    public static GpxToMapWalker<DefaultGpxRunner, FileRunner> getDefaultGpxPathWalker() {
+        return new GpxToMapWalker<>(null, new DefaultGpxRunner(new DefaultGpxMapper.builder().build()), null);
     }
 
-    public Stream<ExtractedGpxResult> getExtractedResults(){
+    public Stream<ExtractedGpxResult> getExtractedResults() {
         return this.gpxResultMap.values().stream();
     }
 }

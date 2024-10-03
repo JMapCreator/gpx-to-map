@@ -22,7 +22,7 @@ public class DefaultGpxRunnerIT {
         Path resourceDirectory = Paths.get("src","test","resources");
 
         // When the default runner uses this file
-        DefaultGpxRunner defaultGpxRunner = new DefaultGpxRunner(new DefaultGpxMapper());
+        DefaultGpxRunner defaultGpxRunner = new DefaultGpxRunner(new DefaultGpxMapper.builder().build());
         Optional<ExtractedGpxResult> result = defaultGpxRunner.run(resourceDirectory.resolve("test.gpx").toFile(), tempDir);
 
         // Then a map should be generated and the infos should be returned

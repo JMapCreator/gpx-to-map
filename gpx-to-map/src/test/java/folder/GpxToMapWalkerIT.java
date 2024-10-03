@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class PathWalkerIT {
+public class GpxToMapWalkerIT {
 
     @TempDir
     File tempDir;
@@ -30,12 +30,12 @@ public class PathWalkerIT {
         Files.copy(resourceGpx, tempDir.toPath().resolve(gpxName));
 
         // When the markdown walker goes through it
-        PathWalker<DefaultGpxRunner, MarkdownRunner> pathWalker = new PathWalker<>(null,
-                new DefaultGpxRunner(new DefaultGpxMapper()),
+        GpxToMapWalker<DefaultGpxRunner, MarkdownRunner> gpxToMapWalker = new GpxToMapWalker<>(null,
+                new DefaultGpxRunner(new DefaultGpxMapper.builder().build()),
                 new MarkdownRunner());
 
         // Then a map should be created and its info should be inserted in the markdown file
-        Files.walkFileTree(tempDir.toPath(), pathWalker);
+        Files.walkFileTree(tempDir.toPath(), gpxToMapWalker);
         SoftAssertions softAssertions = new SoftAssertions();
         softAssertions.assertThat(tempDir.toPath().resolve("test.png").toFile()).exists();
         String expectedHeader = getExpectedHeader();
