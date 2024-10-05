@@ -3,8 +3,8 @@ package folder;
 import files.ExtractedGpxResult;
 import files.FileRunner;
 import files.GpxFileRunner;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +29,7 @@ import static java.nio.file.FileVisitResult.CONTINUE;
  */
 public class GpxToMapWalker<U extends GpxFileRunner, V extends FileRunner> extends SimpleFileVisitor<Path> {
 
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LoggerFactory.getLogger(GpxToMapWalker.class);
 
     private final Map<String, ExtractedGpxResult> gpxResultMap = new HashMap<>();
     private final U gpxFileRunner;

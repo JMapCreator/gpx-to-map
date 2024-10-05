@@ -6,9 +6,9 @@ import io.jenetics.jpx.WayPoint;
 import map.ElevationGraphCreator;
 import map.MapImage;
 import map.StaticMapCreator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.knowm.xchart.XYChart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class DefaultGpxMapper implements IGpxMapper {
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LoggerFactory.getLogger(DefaultGpxMapper.class);
 
     private final int width;
     private final int height;

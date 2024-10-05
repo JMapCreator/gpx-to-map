@@ -9,14 +9,13 @@ import com.hotcoffee.staticmap.layers.Padding;
 import com.hotcoffee.staticmap.layers.TMSLayer;
 import com.hotcoffee.staticmap.layers.components.LineString;
 import io.jenetics.jpx.WayPoint;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.List;
 
 public class StaticMapCreator {
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(StaticMapCreator.class);
 
     public static void drawMap(List<WayPoint> wayPoints, Graphics2D graphics2D, int width, int height) {
         LOGGER.info("Starting to ping tile server...");
