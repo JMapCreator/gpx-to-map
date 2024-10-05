@@ -30,9 +30,11 @@ public class GpxToMapWalkerIT {
         Files.copy(resourceGpx, tempDir.toPath().resolve(gpxName));
 
         // When the markdown walker goes through it
-        GpxToMapWalker<DefaultGpxRunner, MarkdownRunner> gpxToMapWalker = new GpxToMapWalker<>(null,
-                new DefaultGpxRunner(new DefaultGpxMapper.builder().build()),
-                new MarkdownRunner());
+        DefaultGpxMapper defaultGpxMapper = new DefaultGpxMapper.builder().build();
+        var gpxToMapWalker = new GpxToMapWalker.builder<>()
+                .setGpxFileRunner(new DefaultGpxRunner(defaultGpxMapper))
+                .setPostVisitRunner(new MarkdownRunner())
+                .build();
 
         // Then a map should be created and its info should be inserted in the markdown file
         Files.walkFileTree(tempDir.toPath(), gpxToMapWalker);

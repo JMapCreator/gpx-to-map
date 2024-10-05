@@ -1,10 +1,8 @@
 package folder;
 
-import files.DefaultGpxRunner;
 import files.ExtractedGpxResult;
 import files.FileRunner;
 import files.GpxFileRunner;
-import map.DefaultGpxMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,6 +14,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
@@ -34,19 +33,21 @@ public class GpxToMapWalker<U extends GpxFileRunner, V extends FileRunner> exten
     private final U gpxFileRunner;
     private final V postVisitRunner;
     private final Path outPutPath;
+    private final boolean shouldUpdateParentFolder;
 
-    public GpxToMapWalker(Path outPutPath, U gpxFileRunner, V postVisitRunner) {
+    private GpxToMapWalker(Path outPutPath, U gpxFileRunner, V postVisitRunner, boolean shouldUpdateParentFolder) {
         this.outPutPath = outPutPath;
         this.gpxFileRunner = gpxFileRunner;
         this.postVisitRunner = postVisitRunner;
+        this.shouldUpdateParentFolder = shouldUpdateParentFolder;
     }
 
     @Override
     public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
         File file = path.toFile();
         LOGGER.info("Visiting file {}...", file.getName());
-        gpxFileRunner.run(file, outPutPath)
-                .ifPresent(r -> gpxResultMap.put(path.getParent().toString(), r));
+        Optional<ExtractedGpxResult> extractedGpxResult = gpxFileRunner.run(file, outPutPath);
+        extractedGpxResult.ifPresent(gpxResult -> gpxResultMap.put(file.getParent(), gpxResult));
         return CONTINUE;
     }
 
@@ -60,13 +61,44 @@ public class GpxToMapWalker<U extends GpxFileRunner, V extends FileRunner> exten
         return super.postVisitDirectory(dir, exc);
     }
 
+    private boolean isParent(Path dir) {
+        return false;
+    }
+
     @Override
     public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
         return super.visitFileFailed(file, exc);
     }
 
-    public static GpxToMapWalker<DefaultGpxRunner, FileRunner> getDefaultGpxPathWalker() {
-        return new GpxToMapWalker<>(null, new DefaultGpxRunner(new DefaultGpxMapper.builder().build()), null);
+    public static class builder<U extends GpxFileRunner, V extends FileRunner> {
+        private U gpxFileRunner;
+        private V postVisitRunner;
+        private Path outPutPath;
+        private boolean shouldUpdateParentFolder;
+
+        public builder<U, V> setGpxFileRunner(U gpxFileRunner) {
+            this.gpxFileRunner = gpxFileRunner;
+            return this;
+        }
+
+        public builder<U, V> setPostVisitRunner(V postVisitRunner) {
+            this.postVisitRunner = postVisitRunner;
+            return this;
+        }
+
+        public builder<U, V> setOutPutPath(Path outPutPath) {
+            this.outPutPath = outPutPath;
+            return this;
+        }
+
+        public builder<U, V> setShouldUpdateParentFolder(boolean shouldUpdateParentFolder) {
+            this.shouldUpdateParentFolder = shouldUpdateParentFolder;
+            return this;
+        }
+
+        public GpxToMapWalker<U, V> build() {
+            return new GpxToMapWalker<>(this.outPutPath, this.gpxFileRunner, this.postVisitRunner, this.shouldUpdateParentFolder);
+        }
     }
 
     public Stream<ExtractedGpxResult> getExtractedResults() {
