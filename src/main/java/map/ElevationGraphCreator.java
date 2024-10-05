@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class ElevationGraphCreator {
-    static XYChart getElevationGraph(List<WayPoint> wayPoints) {
+    public static XYChart getElevationGraph(List<WayPoint> wayPoints) {
         double[] indices = IntStream.range(0, wayPoints.size())
                 .mapToDouble(i -> i)
                 .toArray();

@@ -18,7 +18,7 @@ import java.util.List;
 public class StaticMapCreator {
     public static final Logger LOGGER = LogManager.getLogger();
 
-    static void drawMap(List<WayPoint> wayPoints, Graphics2D graphics2D, int width, int height) {
+    public static void drawMap(List<WayPoint> wayPoints, Graphics2D graphics2D, int width, int height) {
         LOGGER.info("Starting to ping tile server...");
         List<Location> locationList = wayPoints.stream()
                 .map(wp -> new Location(wp.getLatitude().doubleValue(), wp.getLongitude().doubleValue()))

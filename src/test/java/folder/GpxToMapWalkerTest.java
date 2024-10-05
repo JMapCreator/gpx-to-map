@@ -4,7 +4,7 @@ import files.DefaultGpxRunner;
 import files.ExtractedGpxResult;
 import files.FileRunner;
 import files.GpxFileRunner;
-import map.DefaultGpxMapper;
+import map.gpx.DefaultGpxMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mockito;

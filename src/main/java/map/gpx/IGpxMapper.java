@@ -1,4 +1,4 @@
-package map;
+package map.gpx;
 
 import files.ExtractedGpxResult;
 

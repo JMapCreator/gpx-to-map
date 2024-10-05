@@ -1,7 +1,11 @@
-package map;
+package map.gpx;
 
 import files.ExtractedGpxResult;
+import io.jenetics.jpx.Track;
 import io.jenetics.jpx.WayPoint;
+import map.ElevationGraphCreator;
+import map.MapImage;
+import map.StaticMapCreator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.knowm.xchart.XYChart;
@@ -58,7 +62,8 @@ public class DefaultGpxMapper implements IGpxMapper {
 
     public ExtractedGpxResult map(File gpxFile, Path outputFolder) throws IOException {
         LOGGER.info("Parsing GPX file {}...", gpxFile.getName());
-        List<WayPoint> wayPoints = GpxParser.getWayPoints(gpxFile);
+        List<Track> tracks = GpxParser.getTracks(gpxFile);
+        List<WayPoint> wayPoints = GpxParser.getWayPoints(tracks);
         LOGGER.info("Parsed {} waypoints", wayPoints.size());
         BufferedImage mImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = mImage.createGraphics();
@@ -67,7 +72,7 @@ public class DefaultGpxMapper implements IGpxMapper {
         StaticMapCreator.drawMap(wayPoints, graphics, width, height);
         drawElevationGraph(wayPoints, graphics);
         MapImage.writeMapImageToFile(gpxFile, outputFolder, mImage);
-        return GpxMetadataExtractor.extract(gpxFile.getName(), wayPoints);
+        return GpxMetadataExtractor.extract(gpxFile.getName(), tracks, wayPoints);
     }
 
     private void drawElevationGraph(List<WayPoint> wayPoints, Graphics2D graphics) {

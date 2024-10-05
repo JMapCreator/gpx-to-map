@@ -9,10 +9,12 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -54,6 +56,9 @@ public class GpxToMapWalker<U extends GpxFileRunner, V extends FileRunner> exten
     @Override
     public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
         LOGGER.info("Done visiting directory {}", dir.getFileName());
+        if (shouldUpdateParentFolder) {
+            updateDirWithSubDirsData(dir);
+        }
         if (postVisitRunner != null) {
             LOGGER.info("Using post runner to update files...");
             postVisitRunner.run(dir, outPutPath, gpxResultMap);
@@ -61,8 +66,16 @@ public class GpxToMapWalker<U extends GpxFileRunner, V extends FileRunner> exten
         return super.postVisitDirectory(dir, exc);
     }
 
-    private boolean isParent(Path dir) {
-        return false;
+    private void updateDirWithSubDirsData(Path dir) throws IOException {
+        try (Stream<Path> subFolders = Files.list(dir)) {
+            List<File> matchingSubFolders = subFolders
+                    .filter(sf -> gpxResultMap.containsKey(sf.toString()))
+                    .map(p -> p.resolve(gpxResultMap.get(p.toString()).gpxName()).toFile())
+                    .toList();
+            if (!matchingSubFolders.isEmpty()){
+                gpxFileRunner.run(matchingSubFolders, dir).ifPresent(gpxResult -> gpxResultMap.put(dir.toString(), gpxResult));
+            }
+        }
     }
 
     @Override

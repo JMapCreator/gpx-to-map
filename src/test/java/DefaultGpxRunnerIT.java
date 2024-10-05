@@ -1,6 +1,6 @@
 import files.DefaultGpxRunner;
 import files.ExtractedGpxResult;
-import map.DefaultGpxMapper;
+import map.gpx.DefaultGpxMapper;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

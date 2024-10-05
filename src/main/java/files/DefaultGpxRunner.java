@@ -1,6 +1,6 @@
 package files;
 
-import map.IGpxMapper;
+import map.gpx.IGpxMapper;
 
 public class DefaultGpxRunner extends AbstractGpxRunner<IGpxMapper> {
     public DefaultGpxRunner(IGpxMapper gpxMapper) {

@@ -1,11 +1,14 @@
 package files;
 
-import map.IGpxMapper;
+import map.gpx.GpxParser;
+import map.gpx.IGpxMapper;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public abstract class AbstractGpxRunner<U extends IGpxMapper> implements GpxFileRunner {
 
@@ -22,6 +25,13 @@ public abstract class AbstractGpxRunner<U extends IGpxMapper> implements GpxFile
             return Optional.of(convertToMap(file, outputFolder));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<ExtractedGpxResult> run(List<File> files, Path outputFolder) throws IOException {
+        Stream<File> gpxFiles = files.stream()
+                .filter(f -> f.getName().endsWith(GPX_EXTENSION));
+        return Optional.of(gpxMapper.map(GpxParser.concatGpxFiles(gpxFiles, outputFolder), outputFolder));
     }
 
     public ExtractedGpxResult convertToMap(File gpxFile, Path outputFolder) {

@@ -12,7 +12,7 @@ import java.nio.file.Path;
 public class MapImage {
     public static final Logger LOGGER = LogManager.getLogger();
 
-    static void writeMapImageToFile(File gpxFile, Path outputFolder, BufferedImage mImage) throws IOException {
+    public static void writeMapImageToFile(File gpxFile, Path outputFolder, BufferedImage mImage) throws IOException {
         File file;
         String fileName = String.format("%s.png", gpxFile.getName().split("\\.")[0]);
         if (outputFolder != null) {
