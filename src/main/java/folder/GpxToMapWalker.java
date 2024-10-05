@@ -37,7 +37,7 @@ public class GpxToMapWalker<U extends GpxFileRunner, V extends FileRunner> exten
     private final Path outPutPath;
     private final boolean shouldUpdateParentFolder;
 
-    private GpxToMapWalker(Path outPutPath, U gpxFileRunner, V postVisitRunner, boolean shouldUpdateParentFolder) {
+    public GpxToMapWalker(Path outPutPath, U gpxFileRunner, V postVisitRunner, boolean shouldUpdateParentFolder) {
         this.outPutPath = outPutPath;
         this.gpxFileRunner = gpxFileRunner;
         this.postVisitRunner = postVisitRunner;
