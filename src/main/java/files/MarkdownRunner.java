@@ -75,15 +75,15 @@ public class MarkdownRunner implements FileRunner {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        deleteOldGpxImageIfPresent(headerParams, dir);
+        deleteOldGpxImageIfPresent(headerParams, result, dir);
         updateHeaderParams(result, headerParams);
         setNewHeader(lines, headerParams);
         return lines;
     }
 
-    private static void deleteOldGpxImageIfPresent(Map<String, String> headerParams, Path dir) {
-        if (headerParams.containsKey(GPS_KEY)){
-            LOGGER.info("Previous GPS image reference found in header : {}", headerParams.get(GPS_KEY));
+    private static void deleteOldGpxImageIfPresent(Map<String, String> headerParams, ExtractedGpxResult gpxResult, Path dir) {
+        if (headerParams.containsKey(GPS_KEY) && !headerParams.get(GPS_KEY).equals(gpxResult.gpxName())){
+            LOGGER.info("Different previous GPS image reference found in header : {} (actual {})", headerParams.get(GPS_KEY), gpxResult.gpxName());
             File oldImage = dir.resolve(headerParams.get(GPS_KEY)).toFile();
             if (oldImage.exists()){
                 deleteOldImage(oldImage);
