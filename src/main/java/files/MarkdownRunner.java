@@ -82,10 +82,11 @@ public class MarkdownRunner implements FileRunner {
     }
 
     private static void deleteOldGpxImageIfPresent(Map<String, String> headerParams, ExtractedGpxResult gpxResult, Path dir) {
-        if (headerParams.containsKey(GPS_KEY) && !headerParams.get(GPS_KEY).equals(gpxResult.gpxName())){
-            LOGGER.info("Different previous GPS image reference found in header : {} (actual {})", headerParams.get(GPS_KEY), gpxResult.gpxName());
+        if (headerParams.containsKey(GPS_KEY) && !getFileNameWithoutExt(headerParams.get(GPS_KEY)).equals(getFileNameWithoutExt(gpxResult.gpxName()))) {
+            LOGGER.info("Different previous GPS image reference found in header : {} (actual {})", getFileNameWithoutExt(headerParams.get(GPS_KEY)),
+                    getFileNameWithoutExt(gpxResult.gpxName()));
             File oldImage = dir.resolve(headerParams.get(GPS_KEY)).toFile();
-            if (oldImage.exists()){
+            if (oldImage.exists()) {
                 deleteOldImage(oldImage);
             } else {
                 LOGGER.info("Previous image cannot be found in directory : {}, skipping", dir);
@@ -93,9 +94,13 @@ public class MarkdownRunner implements FileRunner {
         }
     }
 
+    private static String getFileNameWithoutExt(String fileName) {
+        return fileName.split("\\.")[0];
+    }
+
     private static void deleteOldImage(File oldImage) {
         LOGGER.info("Deleting previous image : {}", oldImage.getPath());
-        if (oldImage.delete()){
+        if (oldImage.delete()) {
             LOGGER.info("Previous image deleted");
         } else {
             LOGGER.info("Couldnt delete previous image");
