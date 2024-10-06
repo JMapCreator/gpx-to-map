@@ -13,10 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
@@ -30,6 +27,7 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 public class GpxToMapWalker<U extends GpxFileRunner, V extends FileRunner> extends SimpleFileVisitor<Path> {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(GpxToMapWalker.class);
+    public static final String GPX_EXTENSION = ".gpx";
 
     private final Map<String, ExtractedGpxResult> gpxResultMap = new HashMap<>();
     private final U gpxFileRunner;
@@ -68,14 +66,32 @@ public class GpxToMapWalker<U extends GpxFileRunner, V extends FileRunner> exten
 
     private void updateDirWithSubDirsData(Path dir) throws IOException {
         try (Stream<Path> subFolders = Files.list(dir)) {
-            List<File> matchingSubFolders = subFolders
+            List<Path> subFoldersList = subFolders.toList();
+            Optional<Path> hasAnyModifiedSubfolder = subFoldersList.stream()
                     .filter(sf -> gpxResultMap.containsKey(sf.toString()))
-                    .map(p -> p.resolve(gpxResultMap.get(p.toString()).gpxName()).toFile())
-                    .toList();
-            if (!matchingSubFolders.isEmpty()){
-                gpxFileRunner.run(matchingSubFolders, dir).ifPresent(gpxResult -> gpxResultMap.put(dir.toString(), gpxResult));
+                    .findAny();
+            if (hasAnyModifiedSubfolder.isPresent()) {
+                LOGGER.info("Some GPX files were update in the folder {}, the resulting map will be regenerated", dir);
+                gpxFileRunner.run(collectChildGpxFiles(subFoldersList), dir).ifPresent(gpxResult -> gpxResultMap.put(dir.toString(), gpxResult));
             }
         }
+    }
+
+    private List<File> collectChildGpxFiles(List<Path> subFoldersList) {
+        List<File> gpxFiles = new ArrayList<>();
+        subFoldersList.stream()
+                .filter(Files::isDirectory)
+                .forEach(subFolder -> {
+                    try (Stream<Path> files = Files.list(subFolder)) {
+                        files.filter(f -> f.getFileName().toString().endsWith(GPX_EXTENSION))
+                                .findAny()
+                                .ifPresent(gpxFile -> gpxFiles.add(gpxFile.toFile()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        LOGGER.info("{} child GPX files were collected", gpxFiles.size());
+        return gpxFiles;
     }
 
     @Override
