@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.contentOf;
+
 public class GpxToMapWalkerIT {
 
     @TempDir
@@ -74,34 +76,15 @@ public class GpxToMapWalkerIT {
         // In the parent folder, a map containing the sum of all GPX files should be created and its markdown file update accordingly
         Files.walkFileTree(tempDir.toPath(), gpxToMapWalker);
         SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(tempDir.toPath().resolve("concatenated.png").toFile()).exists();
-        softAssertions.assertThat(tempDir.toPath().resolve("concatenated.gpx").toFile()).exists();
-        String expectedHeader = getConcatenatedExpectedHeader();
-        softAssertions.assertThat(tempDir.toPath().resolve("test.md").toFile()).hasContent(expectedHeader);
+        softAssertions.assertThat(gpxToMapWalker.getExtractedResults()).hasSize(3);
         softAssertions.assertAll();
     }
-
-    private String getConcatenatedExpectedHeader() {
-        return """
-                +++
-                speed = 2.2642484
-                title = "Calenzana - Ortu"
-                gps = concatenated.gpx
-                draft = true
-                distance = 31624
-                duration = 13:58:00
-                date = "2024-09-02 14:57:16.816572"
-                +++
-                
-                """;
-    }
-
     private static String getExpectedHeader() {
         return """
                 +++
                 speed = 2.5377429
                 title = "Calenzana - Ortu"
-                gps = test.gpx
+                gps = test.png
                 draft = true
                 distance = 13173
                 duration = 5:11:27

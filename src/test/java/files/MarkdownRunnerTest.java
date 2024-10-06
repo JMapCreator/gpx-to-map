@@ -37,11 +37,11 @@ class MarkdownRunnerTest {
         String expectedHeader = String.format("""
                 +++
                 speed = %s
-                gps = %s
+                gps = testGpxName.png
                 distance = %s
                 duration = %s
                 +++
-                """, speed, gpxName, distance, testDuration);
+                """, speed, distance, testDuration);
         // Then it should update the markdown file with the gpx infos
         assertThat(testFile.toFile()).hasContent(expectedHeader);
     }
@@ -55,7 +55,7 @@ class MarkdownRunnerTest {
                         +++
                         title = "my nice adventure !"
                         draft = true
-                        gps = toto.gpx
+                        gps = toto.png
                         +++
                         
                         # Title
@@ -78,7 +78,7 @@ class MarkdownRunnerTest {
                 +++
                 speed = %s
                 title = "my nice adventure !"
-                gps = %s
+                gps = testGpxName.png
                 draft = true
                 distance = %s
                 duration = %s
@@ -86,10 +86,58 @@ class MarkdownRunnerTest {
                 
                 # Title
                 Papa tango, this is a test !
-                """, speed, gpxName, distance, testDuration);
+                """, speed, distance, testDuration);
 
         // Then it should update the markdown file with the gpx infos
         assertThat(testFile.toFile()).hasContent(expectedContent);
+    }
+
+    @Test
+    void it_should_delete_previous_image_if_present_in_header() throws IOException {
+        // Given a folder where there is a gpx and a markdown file
+        Path testFile = Files.createFile(tempDir.toPath().resolve("test.md"));
+        Files.writeString(testFile,
+                """
+                        +++
+                        title = "my nice adventure !"
+                        draft = true
+                        gps = oldImage.png
+                        +++
+                        
+                        # Title
+                        Papa tango, this is a test !
+                        """,
+                StandardCharsets.UTF_8);
+        Path testImage = Files.createFile(tempDir.toPath().resolve("oldImage.png"));
+        Map<String, ExtractedGpxResult> gpxResultMap = new HashMap<>();
+        String gpxName = "testGpxName.gpx";
+        String testDuration = "testDuration";
+        float speed = 5f;
+        int elevation = 10;
+        int distance = 10;
+        gpxResultMap.put(tempDir.getPath(), new ExtractedGpxResult(gpxName, testDuration, distance, elevation, speed));
+
+        // When the MarkdownRunner runs through this folder
+        MarkdownRunner markdownRunner = new MarkdownRunner();
+        markdownRunner.run(tempDir.toPath(), null, gpxResultMap);
+
+        String expectedHeader = String.format("""
+                +++
+                speed = %s
+                title = "my nice adventure !"
+                gps = testGpxName.png
+                draft = true
+                distance = %s
+                duration = %s
+                +++
+
+                # Title
+                Papa tango, this is a test !
+                """, speed, distance, testDuration);
+
+        // Then it should update the markdown file with the gpx infos AND delete the old png
+        assertThat(testFile.toFile()).hasContent(expectedHeader);
+        assertThat(testImage.toFile()).doesNotExist();
     }
 
 }
