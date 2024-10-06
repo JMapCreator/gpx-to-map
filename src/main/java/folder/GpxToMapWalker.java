@@ -72,7 +72,12 @@ public class GpxToMapWalker<U extends GpxFileRunner, V extends FileRunner> exten
                     .findAny();
             if (hasAnyModifiedSubfolder.isPresent()) {
                 LOGGER.info("Some GPX files were update in the folder {}, the resulting map will be regenerated", dir);
-                gpxFileRunner.run(collectChildGpxFiles(subFoldersList), dir).ifPresent(gpxResult -> gpxResultMap.put(dir.toString(), gpxResult));
+                List<File> collectChildGpxFiles = collectChildGpxFiles(subFoldersList);
+                if (collectChildGpxFiles.isEmpty()) {
+                    LOGGER.info("No GPX files could be collected in this folder's direct subfolders, skipping...");
+                } else {
+                    gpxFileRunner.run(collectChildGpxFiles, dir).ifPresent(gpxResult -> gpxResultMap.put(dir.toString(), gpxResult));
+                }
             }
         }
     }

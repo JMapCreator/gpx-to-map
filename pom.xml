@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.ibethus.gpxtomap</groupId>
     <artifactId>gpx-to-map</artifactId>
-    <version>1.2.3</version>
+    <version>1.2.4</version>
     <name>gpxtomap</name>
     <url>https://github.com/JMapCreator/gpx-to-map.git</url>
     <description>
