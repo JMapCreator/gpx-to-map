@@ -15,21 +15,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class MarkdownRunner implements FileRunner {
     public static final Logger LOGGER = LoggerFactory.getLogger(MarkdownRunner.class);
 
     public static final String MD_EXTENSION = ".md";
-    public static final String TOML_PARAM_FORMAT = "%s = %s";
+    public static final String TOML_PARAM_FORMAT = "%s = \"%s\"";
     public static final String TOML_HEADER_LINE = "+++";
     public static final String TOML_PARAM_DELIMITER = "=";
+    public static final Pattern TRAILING_QUOTES = Pattern.compile("^\"|\"$");
     public static final String POINT = "\\.";
     public static final String PNG_EXTENSION = ".png";
     public static final String GPS_KEY = "gps";
     public static final String DISTANCE_KEY = "distance";
     public static final String DURATION_KEY = "duration";
     public static final String SPEED_KEY = "speed";
+    public static final String ELEVATION_KEY = "elevation";
 
     @Override
     public void run(Path dir, Path outputFolder, Map<String, ExtractedGpxResult> gpxResultSet) {
@@ -118,6 +121,7 @@ public class MarkdownRunner implements FileRunner {
         headerParams.put(DISTANCE_KEY, String.valueOf(result.distance()));
         headerParams.put(DURATION_KEY, result.duration());
         headerParams.put(SPEED_KEY, String.valueOf(result.speed()));
+        headerParams.put(ELEVATION_KEY, String.valueOf(result.elevation()));
         LOGGER.info("Markdown file updated with new header : {}", headerParams);
     }
 
@@ -131,6 +135,7 @@ public class MarkdownRunner implements FileRunner {
 
     private static void processHeaderLine(String line, Map<String, String> headerParams) {
         String[] param = line.split(TOML_PARAM_DELIMITER);
-        headerParams.put(param[0].trim(), param[1].trim());
+        String sanitizedValue = TRAILING_QUOTES.matcher(param[1].trim()).replaceAll("");
+        headerParams.put(param[0].trim(), sanitizedValue);
     }
 }

@@ -1,12 +1,5 @@
 package folder;
 
-import files.DefaultGpxRunner;
-import files.MarkdownRunner;
-import map.gpx.DefaultGpxMapper;
-import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,7 +7,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.contentOf;
+import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import files.DefaultGpxRunner;
+import files.MarkdownRunner;
+import map.gpx.DefaultGpxMapper;
 
 public class GpxToMapWalkerIT {
 
@@ -82,12 +81,13 @@ public class GpxToMapWalkerIT {
     private static String getExpectedHeader() {
         return """
                 +++
-                speed = 2.5377429
+                speed = "2.5377429"
                 title = "Calenzana - Ortu"
-                gps = test.png
-                draft = true
-                distance = 13173
-                duration = 5:11:27
+                gps = "test.png"
+                draft = "true"
+                distance = "13173"
+                elevation = "1644"
+                duration = "5:11:27"
                 date = "2024-09-02 14:57:16.816572"
                 +++
                 
