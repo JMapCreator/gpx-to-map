@@ -80,7 +80,7 @@ class MarkdownRunnerTest {
                 String expectedContent = """
                                 +++
                                 speed = "5.0"
-                                title = ""my nice adventure !""
+                                title = "my nice adventure !"
                                 gps = "testGpxName.png"
                                 draft = "true"
                                 distance = "10"
@@ -129,7 +129,7 @@ class MarkdownRunnerTest {
                 String expectedHeader = """
                                 +++
                                 speed = "5.0"
-                                title = ""my nice adventure !""
+                                title = "my nice adventure !"
                                 gps = "testGpxName.png"
                                 draft = "true"
                                 distance = "10"
