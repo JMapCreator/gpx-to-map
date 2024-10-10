@@ -1,3 +1,5 @@
 .idea
 target/*
 .vscode
+/target/
+/gpx-to-map.iml
