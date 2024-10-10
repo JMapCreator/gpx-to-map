@@ -13,7 +13,7 @@ Add the dependency to your pom.xml :
 <dependency>
     <groupId>io.github.ibethus.gpxtomap</groupId>
     <artifactId>gpx-to-map</artifactId>
-    <version>1.1.0</version>
+    <version>1.3.1</version>
 </dependency>
 ```
 
