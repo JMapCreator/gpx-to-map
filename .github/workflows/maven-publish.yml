@@ -3,6 +3,7 @@
 
 name: Deploy artifact to Maven Central
 on:
+  workflow_dispatch:
   push:
     tags:
       - v**
@@ -22,7 +23,7 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
       - name: Deploy on Central
-        run: mvn --batch-mode deploy
+        run: mvn deploy
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
