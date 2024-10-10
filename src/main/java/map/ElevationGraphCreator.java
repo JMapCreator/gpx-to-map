@@ -2,6 +2,7 @@ package map;
 
 import io.jenetics.jpx.Length;
 import io.jenetics.jpx.WayPoint;
+import map.gpx.GpxStyler;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class ElevationGraphCreator {
-    public static XYChart getElevationGraph(List<WayPoint> wayPoints) {
+    public static XYChart getElevationGraph(List<WayPoint> wayPoints, GpxStyler styler) {
         double[] indices = IntStream.range(0, wayPoints.size())
                 .mapToDouble(i -> i)
                 .toArray();
@@ -28,10 +29,10 @@ public class ElevationGraphCreator {
         XYChart chart = new XYChartBuilder().height(500).width(800).build();
         XYSeries altitudeSeries = chart.addSeries("Altitude", indices, alt);
         altitudeSeries.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);
-        altitudeSeries.setFillColor(new Color(134, 171, 210, 125));
+        altitudeSeries.setFillColor(styler.graphFillColor());
         altitudeSeries.setSmooth(true);
         altitudeSeries.setMarker(SeriesMarkers.NONE);
-        altitudeSeries.setLineColor(Color.BLACK);
+        altitudeSeries.setLineColor(styler.graphLineColor());
         chart.getStyler().setLegendVisible(false);
         chart.getStyler().setAxisTitlesVisible(false);
         chart.getStyler().setChartTitleVisible(false);

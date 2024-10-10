@@ -55,7 +55,7 @@ public class DefaultGpxMapper implements IGpxMapper {
         }
 
         public DefaultGpxMapper build() {
-            if (this.gpxStyler == null){
+            if (this.gpxStyler == null) {
                 this.gpxStyler = GpxStyler.getDefaultStyler();
             }
             return new DefaultGpxMapper(this.width, this.height, this.chartHeight, this.gpxStyler);
@@ -73,17 +73,19 @@ public class DefaultGpxMapper implements IGpxMapper {
         LOGGER.info("Parsed {} waypoints", wayPoints.size());
         BufferedImage mImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = mImage.createGraphics();
-        graphics.setColor(Color.WHITE);
+        graphics.setColor(this.styler.backgroundColor());
         graphics.fillRect(0, 0, width, height);
-        StaticMapCreator.drawMap(wayPoints, graphics, width, height);
-        drawElevationGraph(wayPoints, graphics);
+        StaticMapCreator.drawMap(wayPoints, graphics, width, height, styler);
+        if (styler.displayElevationGraph()) {
+            drawElevationGraph(wayPoints, graphics);
+        }
         MapImage.writeMapImageToFile(gpxFile, outputFolder, mImage);
         return GpxMetadataExtractor.extract(gpxFile.getName(), tracks, wayPoints);
     }
 
     private void drawElevationGraph(List<WayPoint> wayPoints, Graphics2D graphics) {
         LOGGER.info("Drawing elevation graph...");
-        XYChart xyChart = ElevationGraphCreator.getElevationGraph(wayPoints);
+        XYChart xyChart = ElevationGraphCreator.getElevationGraph(wayPoints, this.styler);
         AffineTransform startFromBottom = AffineTransform.getTranslateInstance(0, height - chartHeight);
         graphics.setTransform(startFromBottom);
         xyChart.paint(graphics, width, chartHeight);
