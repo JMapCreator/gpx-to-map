@@ -24,17 +24,20 @@ public class DefaultGpxMapper implements IGpxMapper {
     private final int width;
     private final int height;
     private final int chartHeight;
+    private final GpxStyler styler;
 
-    private DefaultGpxMapper(int width, int height, int chartHeight) {
+    public DefaultGpxMapper(int width, int height, int chartHeight, GpxStyler styler) {
         this.width = width;
         this.height = height;
         this.chartHeight = chartHeight;
+        this.styler = styler;
     }
 
     public static class builder {
         int width = 1000;
         int height = 1400;
         int chartHeight = 150;
+        GpxStyler gpxStyler;
 
         public builder withWidth(int width) {
             this.width = width;
@@ -52,7 +55,10 @@ public class DefaultGpxMapper implements IGpxMapper {
         }
 
         public DefaultGpxMapper build() {
-            return new DefaultGpxMapper(this.width, this.height, this.chartHeight);
+            if (this.gpxStyler == null){
+                this.gpxStyler = GpxStyler.getDefaultStyler();
+            }
+            return new DefaultGpxMapper(this.width, this.height, this.chartHeight, this.gpxStyler);
         }
     }
 
