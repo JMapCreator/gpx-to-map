@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"files"},{"l":"folder"},{"l":"map"},{"l":"map.gpx"}];updateSearchResults();
