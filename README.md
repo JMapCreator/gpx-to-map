@@ -73,5 +73,4 @@ If you want to contribute, please open issues, or fork the repo and open PRs. I 
 
 ## TODOs
 
-* Not much configuration can be done for now -> to be improved (color, size, tile provider, etc.)
 * Use TestContainer for ITs
