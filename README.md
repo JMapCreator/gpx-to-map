@@ -1,6 +1,6 @@
 # GPX to map
 
-[![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://github.com/gpx-to-map/gpx-to-map-core/javadoc/)
+[![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://gpx-to-map.github.io/gpx-to-map-core/javadoc/)
 
 This library can be used to generate batches of nice maps from GPX files.
 
