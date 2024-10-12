@@ -33,20 +33,20 @@ public class ElevationGraphCreator {
      */
     public static BufferedImage createElevationGraph(List<WayPoint> wayPoints, int chartWidth, int chartHeight, GpxStyler styler) {
         LOGGER.info("Drawing elevation graph...");
-        BufferedImage mImage = new BufferedImage(chartWidth, chartHeight, BufferedImage.TYPE_INT_RGB);
+        BufferedImage mImage = new BufferedImage(chartWidth, chartHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = mImage.createGraphics();
         graphics.setColor(styler.backgroundColor());
         graphics.fillRect(0, 0, chartWidth, chartHeight);
         XYChart xyChart = ElevationGraphCreator.getElevationGraph(wayPoints, styler);
         xyChart.paint(graphics, chartWidth, chartHeight);
-        LOGGER.info("Drawing elevation graph finished");
+        LOGGER.info("Drawing of elevation graph finished");
         return mImage;
     }
 
     private static XYChart getElevationGraph(List<WayPoint> wayPoints, GpxStyler styler) {
         double[] indices = getIndices(wayPoints);
         double[] alt = getElevationPoints(wayPoints);
-        XYChart chart = new XYChartBuilder().height(500).width(800).build();
+        XYChart chart = new XYChartBuilder().build();
         XYSeries altitudeSeries = chart.addSeries("Altitude", indices, alt);
         altitudeSeries.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);
         altitudeSeries.setFillColor(styler.graphFillColor());
@@ -57,9 +57,9 @@ public class ElevationGraphCreator {
         chart.getStyler().setAxisTitlesVisible(false);
         chart.getStyler().setChartTitleVisible(false);
         chart.getStyler().setXAxisTicksVisible(false);
-        chart.getStyler().setPlotMargin(0);
+        chart.getStyler().setPlotMargin(styler.graphPlotMargin());
         chart.getStyler().setPlotContentSize(1D);
-        chart.getStyler().setChartPadding(0);
+        chart.getStyler().setChartPadding(styler.graphChartPadding());
         chart.getStyler().setChartBackgroundColor(new Color(0, 0, 0, 0));
         chart.getStyler().setPlotBackgroundColor(new Color(0, 0, 0, 0));
         chart.getStyler().setPlotBorderVisible(false);

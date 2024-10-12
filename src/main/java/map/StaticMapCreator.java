@@ -31,7 +31,7 @@ public class StaticMapCreator {
      * @param styler     the style of the static map
      */
     public static BufferedImage createMap(List<WayPoint> wayPoints, int width, int height, GpxStyler styler) {
-        BufferedImage mImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage mImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = mImage.createGraphics();
         graphics.setColor(styler.backgroundColor());
         graphics.fillRect(0, 0, width, height);

@@ -19,6 +19,8 @@ import java.awt.*;
  * @param displayElevationGraph whether the elevation should be displayed or not
  * @param graphFillColor        color of the graph area
  * @param graphLineColor        color of the graph line
+ * @param graphChartPadding     padding around the graph chart
+ * @param graphPlotMargin       margin around the graph plot
  */
 public record GpxStyler(Color backgroundColor,
                         GraphToMapPosition graphPosition,
@@ -33,7 +35,9 @@ public record GpxStyler(Color backgroundColor,
                         boolean showStartingPoints,
                         boolean displayElevationGraph,
                         Color graphFillColor,
-                        Color graphLineColor) {
+                        Color graphLineColor,
+                        int graphPlotMargin,
+                        int graphChartPadding) {
 
     /**
      * Provide a default {@link GpxStyler} with standard values.
@@ -50,93 +54,106 @@ public record GpxStyler(Color backgroundColor,
      */
     public static class builder {
         private static final Color LIGHT_BLUE = new Color(134, 171, 210);
-        Color backgroundColor = Color.WHITE;
-        GraphToMapPosition graphPosition = GraphToMapPosition.BOTTOM;
-        int strokeWidth = 3;
-        Color strokeColor = LIGHT_BLUE;
-        Color outlineColor = Color.BLACK;
-        int centerOffsetX = 0;
-        int centerOffsetY = 0;
-        int paddingX = 0;
-        int paddingY = 0;
-        TileProvider tileProvider = TileProvider.ARCGIS_ONLINE;
-        boolean showStartingPoints = false;
-        boolean displayElevationGraph = true;
-        Color graphFillColor = new Color(134, 171, 210, 125);
-        Color graphLineColor = Color.BLACK;
+        private Color backgroundColor = Color.WHITE;
+        private GraphToMapPosition graphPosition = GraphToMapPosition.BOTTOM;
+        private int strokeWidth = 3;
+        private Color strokeColor = LIGHT_BLUE;
+        private Color outlineColor = Color.BLACK;
+        private int centerOffsetX = 0;
+        private int centerOffsetY = 0;
+        private int paddingX = 0;
+        private int paddingY = 0;
+        private TileProvider tileProvider = TileProvider.ARCGIS_ONLINE;
+        private boolean showStartingPoints = false;
+        private boolean displayElevationGraph = true;
+        private Color graphFillColor = new Color(134, 171, 210, 125);
+        private Color graphLineColor = Color.BLACK;
+        private int graphPlotMargin = 0;
+        private int graphChartPadding = 0;
 
         public GpxStyler build() {
             return new GpxStyler(backgroundColor, graphPosition, strokeWidth, strokeColor, outlineColor, centerOffsetX, centerOffsetY,
-                    paddingX, paddingY, tileProvider, showStartingPoints, displayElevationGraph, graphFillColor, graphLineColor);
+                    paddingX, paddingY, tileProvider, showStartingPoints, displayElevationGraph, graphFillColor, graphLineColor,
+                    graphPlotMargin, graphChartPadding);
         }
 
-        public builder setBackgroundColor(Color backgroundColor) {
+        public builder withBackgroundColor(Color backgroundColor) {
             this.backgroundColor = backgroundColor;
             return this;
         }
 
-        public builder setGraphPosition(GraphToMapPosition graphPosition) {
+        public builder withGraphPosition(GraphToMapPosition graphPosition) {
             this.graphPosition = graphPosition;
             return this;
         }
 
-        public builder setStrokeWidth(int strokeWidth) {
+        public builder withStrokeWidth(int strokeWidth) {
             this.strokeWidth = strokeWidth;
             return this;
         }
 
-        public builder setStrokeColor(Color strokeColor) {
+        public builder withStrokeColor(Color strokeColor) {
             this.strokeColor = strokeColor;
             return this;
         }
 
-        public builder setOutlineColor(Color outlineColor) {
+        public builder withOutlineColor(Color outlineColor) {
             this.outlineColor = outlineColor;
             return this;
         }
 
-        public builder setCenterOffsetX(int centerOffsetX) {
+        public builder withCenterOffsetX(int centerOffsetX) {
             this.centerOffsetX = centerOffsetX;
             return this;
         }
 
-        public builder setCenterOffsetY(int centerOffsetY) {
+        public builder withCenterOffsetY(int centerOffsetY) {
             this.centerOffsetY = centerOffsetY;
             return this;
         }
 
-        public builder setPaddingX(int paddingX) {
+        public builder withPaddingX(int paddingX) {
             this.paddingX = paddingX;
             return this;
         }
 
-        public builder setPaddingY(int paddingY) {
+        public builder withPaddingY(int paddingY) {
             this.paddingY = paddingY;
             return this;
         }
 
-        public builder setTileProvider(TileProvider tileProvider) {
+        public builder withTileProvider(TileProvider tileProvider) {
             this.tileProvider = tileProvider;
             return this;
         }
 
-        public builder setShowStartingPoints(boolean showStartingPoints) {
+        public builder withShowStartingPoints(boolean showStartingPoints) {
             this.showStartingPoints = showStartingPoints;
             return this;
         }
 
-        public builder setDisplayElevationGraph(boolean displayElevationGraph) {
+        public builder withDisplayElevationGraph(boolean displayElevationGraph) {
             this.displayElevationGraph = displayElevationGraph;
             return this;
         }
 
-        public builder setGraphFillColor(Color graphFillColor) {
+        public builder withGraphFillColor(Color graphFillColor) {
             this.graphFillColor = graphFillColor;
             return this;
         }
 
-        public builder setGraphLineColor(Color graphLineColor) {
+        public builder withGraphLineColor(Color graphLineColor) {
             this.graphLineColor = graphLineColor;
+            return this;
+        }
+
+        public builder withGraphPlotMargin(int graphPlotMargin) {
+            this.graphPlotMargin = graphPlotMargin;
+            return this;
+        }
+
+        public builder withGraphChartPadding(int graphChartPadding) {
+            this.graphChartPadding = graphChartPadding;
             return this;
         }
     }

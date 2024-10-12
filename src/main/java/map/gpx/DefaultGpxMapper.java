@@ -19,6 +19,8 @@ import java.util.List;
 /**
  * This class can be extended to implement your own GpxMapper. However, it can be used <i>as is</i>,
  * to provide default functionalities.
+ * <p>
+ * The {@link builder} should be used to create and configure an instance.
  */
 public class DefaultGpxMapper implements IGpxMapper {
     public static final Logger LOGGER = LoggerFactory.getLogger(DefaultGpxMapper.class);
@@ -28,40 +30,11 @@ public class DefaultGpxMapper implements IGpxMapper {
     private final int chartHeight;
     private final GpxStyler styler;
 
-    public DefaultGpxMapper(int width, int height, int chartHeight, GpxStyler styler) {
+    private DefaultGpxMapper(int width, int height, int chartHeight, GpxStyler styler) {
         this.width = width;
         this.height = height;
         this.chartHeight = chartHeight;
         this.styler = styler;
-    }
-
-    public static class builder {
-        int width = 1000;
-        int height = 1400;
-        int chartHeight = 150;
-        GpxStyler gpxStyler;
-
-        public builder withWidth(int width) {
-            this.width = width;
-            return this;
-        }
-
-        public builder withHeight(int height) {
-            this.height = height;
-            return this;
-        }
-
-        public builder withChartHeight(int chartHeight) {
-            this.chartHeight = chartHeight;
-            return this;
-        }
-
-        public DefaultGpxMapper build() {
-            if (this.gpxStyler == null) {
-                this.gpxStyler = GpxStyler.getDefaultStyler();
-            }
-            return new DefaultGpxMapper(this.width, this.height, this.chartHeight, this.gpxStyler);
-        }
     }
 
     public ExtractedGpxResult map(File gpxFile) throws IOException {
@@ -96,5 +69,54 @@ public class DefaultGpxMapper implements IGpxMapper {
         }
         graphics.dispose();
         MapWriter.writeMapImageToFile(gpxFile, outputFolder, combinedImages);
+    }
+
+    /**
+     * Builder for the {@link DefaultGpxMapper}
+     */
+    public static class builder {
+        /**
+         * Default map width. The chart will always use the exact same width
+         */
+        private int width = 1000;
+        /**
+         * Default map height
+         */
+        private int height = 1400;
+        /**
+         * Default chart height. Resulting image height will be {@link #height} + chartHeight
+         */
+        private int chartHeight = 150;
+        /**
+         * The {@link GpxStyler} to use. If none provided, the {@link GpxStyler#getDefaultStyler()} method will be used to create a default one
+         */
+        private GpxStyler gpxStyler;
+
+        public builder withWidth(int width) {
+            this.width = width;
+            return this;
+        }
+
+        public builder withHeight(int height) {
+            this.height = height;
+            return this;
+        }
+
+        public builder withChartHeight(int chartHeight) {
+            this.chartHeight = chartHeight;
+            return this;
+        }
+
+        public builder withGpxStyler(GpxStyler gpxStyler) {
+            this.gpxStyler = gpxStyler;
+            return this;
+        }
+
+        public DefaultGpxMapper build() {
+            if (this.gpxStyler == null) {
+                this.gpxStyler = GpxStyler.getDefaultStyler();
+            }
+            return new DefaultGpxMapper(this.width, this.height, this.chartHeight, this.gpxStyler);
+        }
     }
 }
