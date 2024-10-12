@@ -15,15 +15,31 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * Utility class for parsing and manipulating GPX files.
+ */
 public class GpxParser {
 
     public static final String INDENT = "    ";
 
+    /**
+     * Parse a list of {@link Track} from a GPX file
+     *
+     * @param gpxFile the GPX file to read
+     * @return a list of {@link Track} parsed from the GPX file
+     * @throws IOException if the GPX file cannot be read
+     */
     public static List<Track> getTracks(File gpxFile) throws IOException {
         return GPX.read(Path.of(gpxFile.toURI())).tracks()
                 .toList();
     }
 
+    /**
+     * Read {@link WayPoint} from a {@link Track}
+     *
+     * @param tracks list of {@link Track} to parse
+     * @return list of parsed {@link WayPoint}
+     */
     public static List<WayPoint> getWayPoints(List<Track> tracks) {
         return tracks.stream()
                 .flatMap(Track::segments)
@@ -31,7 +47,16 @@ public class GpxParser {
                 .toList();
     }
 
-    public static File concatGpxFiles(Stream<File> gpxFiles, Path outputFolder) throws IOException {
+    /**
+     * Concatenate multiple GPX files. Their {@link Track} will be sorted by the date of their most recent {@link WayPoint}.
+     * This ensures that the GPX path will be coherent. However, if tracks are far apart from each other, strait lines will be drawn on the map,
+     * in order to join each track together.
+     *
+     * @param gpxFiles a stream of GPX files to concatenate together
+     * @return a GPX {@link File}, resulting of the concatenation of the input GPX files
+     * @throws IOException if there is a problem while reading/writing any of the files
+     */
+    public static File concatGpxFiles(Stream<File> gpxFiles) throws IOException {
         GPX.Builder gpxBuilder = GPX.builder();
         gpxFiles
                 .map(File::toPath)

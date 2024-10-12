@@ -31,7 +31,7 @@ public abstract class AbstractGpxRunner<U extends IGpxMapper> implements GpxFile
     public Optional<ExtractedGpxResult> run(List<File> files, Path outputFolder) throws IOException {
         Stream<File> gpxFiles = files.stream()
                 .filter(f -> f.getName().endsWith(GPX_EXTENSION));
-        return Optional.of(gpxMapper.map(GpxParser.concatGpxFiles(gpxFiles, outputFolder), outputFolder));
+        return Optional.of(gpxMapper.map(GpxParser.concatGpxFiles(gpxFiles), outputFolder));
     }
 
     public ExtractedGpxResult convertToMap(File gpxFile, Path outputFolder) {

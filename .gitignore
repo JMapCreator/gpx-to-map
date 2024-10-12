@@ -1,5 +1,5 @@
-.idea/*
+.idea
+target/*
+.vscode
 /target/
-*/target/**
-.vscode/
-
+/gpx-to-map.iml

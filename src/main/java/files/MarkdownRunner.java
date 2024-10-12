@@ -18,21 +18,40 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * A runner that will update any markdown file it finds in the same folder as a GPX file.
+ * Inserts a TOML header in the file, containing the GPX extracted metadata.
+ * <p>
+ * Resulting header will look something similar to this :
+ * <pre>
+ *     {@code
+ *  +++
+ *  speed = "2.0874372"
+ *  gps = "my-gpx-file.png"
+ *  distance = "18319"
+ *  elevation = "1680"
+ *  duration = "8:46:33"
+ *  +++
+ *     }
+ * </pre>
+ * <p>
+ * If a TOML header is already present, this runner will <b>not</b> erase it, but combines it with the new data.
+ */
 public class MarkdownRunner implements FileRunner {
-    public static final Logger LOGGER = LoggerFactory.getLogger(MarkdownRunner.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MarkdownRunner.class);
 
-    public static final String MD_EXTENSION = ".md";
-    public static final String TOML_PARAM_FORMAT = "%s = \"%s\"";
-    public static final String TOML_HEADER_LINE = "+++";
-    public static final String TOML_PARAM_DELIMITER = "=";
-    public static final Pattern TRAILING_QUOTES = Pattern.compile("^\"|\"$");
-    public static final String POINT = "\\.";
-    public static final String PNG_EXTENSION = ".png";
-    public static final String GPS_KEY = "gps";
-    public static final String DISTANCE_KEY = "distance";
-    public static final String DURATION_KEY = "duration";
-    public static final String SPEED_KEY = "speed";
-    public static final String ELEVATION_KEY = "elevation";
+    private static final String MD_EXTENSION = ".md";
+    private static final String TOML_PARAM_FORMAT = "%s = \"%s\"";
+    private static final String TOML_HEADER_LINE = "+++";
+    private static final String TOML_PARAM_DELIMITER = "=";
+    private static final Pattern TRAILING_QUOTES = Pattern.compile("^\"|\"$");
+    private static final String POINT = "\\.";
+    private static final String PNG_EXTENSION = ".png";
+    private static final String GPS_KEY = "gps";
+    private static final String DISTANCE_KEY = "distance";
+    private static final String DURATION_KEY = "duration";
+    private static final String SPEED_KEY = "speed";
+    private static final String ELEVATION_KEY = "elevation";
 
     @Override
     public void run(Path dir, Path outputFolder, Map<String, ExtractedGpxResult> gpxResultSet) {
