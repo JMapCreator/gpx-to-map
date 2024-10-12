@@ -1,6 +1,6 @@
 package map.gpx;
 
-public enum TextToMapPosition {
+public enum GraphToMapPosition {
     TOP,
     BOTTOM;
 

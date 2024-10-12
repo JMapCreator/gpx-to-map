@@ -13,6 +13,7 @@ import map.gpx.GpxStyler;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
@@ -24,13 +25,16 @@ public class StaticMapCreator {
     /**
      * Gets tiles from server, fits the GPX path in the image and draws it
      *
-     * @param wayPoints  the list of waypoints resulting of the parsing of the GPX file
-     * @param graphics2D graphics holding the resulting image
+     * @param wayPoints  the list of waypoints resulting of the parsing of the GPX file*
      * @param width      width of the final image
      * @param height     height of the final image
      * @param styler     the style of the static map
      */
-    public static void drawMap(List<WayPoint> wayPoints, Graphics2D graphics2D, int width, int height, GpxStyler styler) {
+    public static BufferedImage createMap(List<WayPoint> wayPoints, int width, int height, GpxStyler styler) {
+        BufferedImage mImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = mImage.createGraphics();
+        graphics.setColor(styler.backgroundColor());
+        graphics.fillRect(0, 0, width, height);
         LOGGER.info("Starting to ping tile server...");
         List<Location> locationList = wayPoints.stream()
                 .map(wp -> new Location(wp.getLatitude().doubleValue(), wp.getLongitude().doubleValue()))
@@ -48,7 +52,8 @@ public class StaticMapCreator {
         mp.fitBounds(locationBounds, new Padding(styler.paddingY(), 0, styler.paddingX(), 0));
         mp.addLayer(baseMap);
         mp.addLayer(lineString);
-        mp.drawInto(graphics2D, new CenterOffset(styler.centerOffsetX(), styler.centerOffsetY()));
+        mp.drawInto(graphics, new CenterOffset(styler.centerOffsetX(), styler.centerOffsetY()));
         LOGGER.info("Map infos acquired");
+        return mImage;
     }
 }

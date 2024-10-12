@@ -21,7 +21,7 @@ import java.awt.*;
  * @param graphLineColor        color of the graph line
  */
 public record GpxStyler(Color backgroundColor,
-                        TextToMapPosition graphPosition,
+                        GraphToMapPosition graphPosition,
                         int strokeWidth,
                         Color strokeColor,
                         Color outlineColor,
@@ -51,7 +51,7 @@ public record GpxStyler(Color backgroundColor,
     public static class builder {
         private static final Color LIGHT_BLUE = new Color(134, 171, 210);
         Color backgroundColor = Color.WHITE;
-        TextToMapPosition textPosition = TextToMapPosition.BOTTOM;
+        GraphToMapPosition graphPosition = GraphToMapPosition.BOTTOM;
         int strokeWidth = 3;
         Color strokeColor = LIGHT_BLUE;
         Color outlineColor = Color.BLACK;
@@ -66,7 +66,7 @@ public record GpxStyler(Color backgroundColor,
         Color graphLineColor = Color.BLACK;
 
         public GpxStyler build() {
-            return new GpxStyler(backgroundColor, textPosition, strokeWidth, strokeColor, outlineColor, centerOffsetX, centerOffsetY,
+            return new GpxStyler(backgroundColor, graphPosition, strokeWidth, strokeColor, outlineColor, centerOffsetX, centerOffsetY,
                     paddingX, paddingY, tileProvider, showStartingPoints, displayElevationGraph, graphFillColor, graphLineColor);
         }
 
@@ -75,8 +75,8 @@ public record GpxStyler(Color backgroundColor,
             return this;
         }
 
-        public builder setTextPosition(TextToMapPosition textPosition) {
-            this.textPosition = textPosition;
+        public builder setGraphPosition(GraphToMapPosition graphPosition) {
+            this.graphPosition = graphPosition;
             return this;
         }
 

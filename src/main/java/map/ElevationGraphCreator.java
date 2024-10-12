@@ -7,8 +7,12 @@ import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.markers.SeriesMarkers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -16,14 +20,30 @@ import java.util.stream.IntStream;
  * Composing and drawing an elevation graph from GPX elevation data
  */
 public class ElevationGraphCreator {
+    public static final Logger LOGGER = LoggerFactory.getLogger(ElevationGraphCreator.class);
+
     /**
      * Compose an {@link XYChart} from GPX input data. This chart can be configured using the provided {@link GpxStyler}.
      *
-     * @param wayPoints list of waypoints read from the GPX file
-     * @param styler    configuration option for the graph
-     * @return a composed {@link XYChart}
+     * @param wayPoints   waypoints parsed from the GPX file
+     * @param chartWidth  width of the elevation graph
+     * @param chartHeight height of the elevation graph
+     * @param styler      {@link GpxStyler} used to configure the graph
+     * @return a {@link BufferedImage} containing the graph drawing
      */
-    public static XYChart getElevationGraph(List<WayPoint> wayPoints, GpxStyler styler) {
+    public static BufferedImage createElevationGraph(List<WayPoint> wayPoints, int chartWidth, int chartHeight, GpxStyler styler) {
+        LOGGER.info("Drawing elevation graph...");
+        BufferedImage mImage = new BufferedImage(chartWidth, chartHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = mImage.createGraphics();
+        graphics.setColor(styler.backgroundColor());
+        graphics.fillRect(0, 0, chartWidth, chartHeight);
+        XYChart xyChart = ElevationGraphCreator.getElevationGraph(wayPoints, styler);
+        xyChart.paint(graphics, chartWidth, chartHeight);
+        LOGGER.info("Drawing elevation graph finished");
+        return mImage;
+    }
+
+    private static XYChart getElevationGraph(List<WayPoint> wayPoints, GpxStyler styler) {
         double[] indices = getIndices(wayPoints);
         double[] alt = getElevationPoints(wayPoints);
         XYChart chart = new XYChartBuilder().height(500).width(800).build();

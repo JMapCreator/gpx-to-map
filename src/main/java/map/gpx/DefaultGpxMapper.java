@@ -6,12 +6,10 @@ import io.jenetics.jpx.WayPoint;
 import map.ElevationGraphCreator;
 import map.MapWriter;
 import map.StaticMapCreator;
-import org.knowm.xchart.XYChart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -75,25 +73,28 @@ public class DefaultGpxMapper implements IGpxMapper {
         List<Track> tracks = GpxParser.getTracks(gpxFile);
         List<WayPoint> wayPoints = GpxParser.getWayPoints(tracks);
         LOGGER.info("Parsed {} waypoints", wayPoints.size());
-        BufferedImage mImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = mImage.createGraphics();
-        graphics.setColor(this.styler.backgroundColor());
-        graphics.fillRect(0, 0, width, height);
-        StaticMapCreator.drawMap(wayPoints, graphics, width, height, styler);
+
+        BufferedImage map = StaticMapCreator.createMap(wayPoints, width, height, styler);
         if (styler.displayElevationGraph()) {
-            drawElevationGraph(wayPoints, graphics);
+            drawMapWithGraph(gpxFile, outputFolder, wayPoints, map);
+        } else {
+            MapWriter.writeMapImageToFile(gpxFile, outputFolder, map);
         }
-        MapWriter.writeMapImageToFile(gpxFile, outputFolder, mImage);
         return GpxMetadataExtractor.extract(gpxFile.getName(), tracks, wayPoints);
     }
 
-    private void drawElevationGraph(List<WayPoint> wayPoints, Graphics2D graphics) {
-        LOGGER.info("Drawing elevation graph...");
-        XYChart xyChart = ElevationGraphCreator.getElevationGraph(wayPoints, this.styler);
-        AffineTransform startFromBottom = AffineTransform.getTranslateInstance(0, height - chartHeight);
-        graphics.setTransform(startFromBottom);
-        xyChart.paint(graphics, width, chartHeight);
-        LOGGER.info("Drawing elevation graph finished");
+    private void drawMapWithGraph(File gpxFile, Path outputFolder, List<WayPoint> wayPoints, BufferedImage map) throws IOException {
+        BufferedImage elevationGraph = ElevationGraphCreator.createElevationGraph(wayPoints, width, chartHeight, styler);
+        BufferedImage combinedImages = new BufferedImage(width, height + chartHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics graphics = combinedImages.getGraphics();
+        if (GraphToMapPosition.BOTTOM == styler.graphPosition()) {
+            graphics.drawImage(map, 0, 0, null);
+            graphics.drawImage(elevationGraph, 0, height, null);
+        } else {
+            graphics.drawImage(map, 0, chartHeight, null);
+            graphics.drawImage(elevationGraph, 0, 0, null);
+        }
+        graphics.dispose();
+        MapWriter.writeMapImageToFile(gpxFile, outputFolder, combinedImages);
     }
-
 }
