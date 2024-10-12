@@ -4,7 +4,7 @@ import files.ExtractedGpxResult;
 import io.jenetics.jpx.Track;
 import io.jenetics.jpx.WayPoint;
 import map.ElevationGraphCreator;
-import map.MapImage;
+import map.MapWriter;
 import map.StaticMapCreator;
 import org.knowm.xchart.XYChart;
 import org.slf4j.Logger;
@@ -18,6 +18,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * This class can be extended to implement your own GpxMapper. However, it can be used <i>as is</i>,
+ * to provide default functionalities.
+ */
 public class DefaultGpxMapper implements IGpxMapper {
     public static final Logger LOGGER = LoggerFactory.getLogger(DefaultGpxMapper.class);
 
@@ -79,7 +83,7 @@ public class DefaultGpxMapper implements IGpxMapper {
         if (styler.displayElevationGraph()) {
             drawElevationGraph(wayPoints, graphics);
         }
-        MapImage.writeMapImageToFile(gpxFile, outputFolder, mImage);
+        MapWriter.writeMapImageToFile(gpxFile, outputFolder, mImage);
         return GpxMetadataExtractor.extract(gpxFile.getName(), tracks, wayPoints);
     }
 

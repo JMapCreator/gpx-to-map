@@ -2,8 +2,26 @@ package map.gpx;
 
 import java.awt.*;
 
+/**
+ * This class represents the available configuration when building a {@link IGpxMapper}.
+ *
+ * @param backgroundColor       global background color of the image
+ * @param graphPosition         whether the graph should be located on top or bottom of the image
+ * @param strokeWidth           width of the stroke of the GPX path on the map
+ * @param strokeColor           color of the stroke of the GPX path on the map
+ * @param outlineColor          outline color of the stroke of the GPX path on the map
+ * @param centerOffsetX         offset the center point of the GPX path on the map on the X axis
+ * @param centerOffsetY         offset the center point of the GPX path on the map on the Y axis
+ * @param paddingX              adds padding on top and bottom of the GPX path on the map
+ * @param paddingY              adds padding on the left and right of the GPX path on the map
+ * @param tileProvider          the provider of the tiles (will change the map appearance)
+ * @param showStartingPoints    whether the starting point of each track on the GPX file should be shown on the map
+ * @param displayElevationGraph whether the elevation should be displayed or not
+ * @param graphFillColor        color of the graph area
+ * @param graphLineColor        color of the graph line
+ */
 public record GpxStyler(Color backgroundColor,
-                        TextToMapPosition textPosition,
+                        TextToMapPosition graphPosition,
                         int strokeWidth,
                         Color strokeColor,
                         Color outlineColor,
@@ -17,10 +35,19 @@ public record GpxStyler(Color backgroundColor,
                         Color graphFillColor,
                         Color graphLineColor) {
 
+    /**
+     * Provide a default {@link GpxStyler} with standard values.
+     *
+     * @return default {@link GpxStyler}
+     */
     public static GpxStyler getDefaultStyler() {
         return new GpxStyler.builder().build();
     }
 
+    /**
+     * Use this builder to easily configure a {@link GpxStyler}.
+     * All fields have default values and thus are optional.
+     */
     public static class builder {
         private static final Color LIGHT_BLUE = new Color(134, 171, 210);
         Color backgroundColor = Color.WHITE;

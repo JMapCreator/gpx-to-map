@@ -50,8 +50,8 @@ class GpxMetadataExtractorTest {
 
         // When the file gets parsed
         File concatenated = GpxParser.concatGpxFiles(Stream.of(resourceDirectory.resolve(gpxName).toFile(),
-                resourceDirectory.resolve(gpxName2).toFile()),
-                tempDir.toPath());
+                resourceDirectory.resolve(gpxName2).toFile())
+        );
         List<Track> tracks = GpxParser.getTracks(concatenated);
         List<WayPoint> wayPoints = GpxParser.getWayPoints(tracks);
         ExtractedGpxResult extracted = GpxMetadataExtractor.extract(gpxName, tracks, wayPoints);

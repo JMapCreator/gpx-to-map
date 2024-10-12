@@ -9,6 +9,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
+/**
+ * Execute a reduce operation on a collection of integer to
+ * sum positive difference between two following points.
+ */
 public class PositiveElevationCollector implements Collector<Integer, List<Integer>, Integer> {
     private Integer positiveElevation = 0;
 

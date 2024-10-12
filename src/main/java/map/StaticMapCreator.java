@@ -15,9 +15,21 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Map image creation from GPX
+ */
 public class StaticMapCreator {
     public static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(StaticMapCreator.class);
 
+    /**
+     * Gets tiles from server, fits the GPX path in the image and draws it
+     *
+     * @param wayPoints  the list of waypoints resulting of the parsing of the GPX file
+     * @param graphics2D graphics holding the resulting image
+     * @param width      width of the final image
+     * @param height     height of the final image
+     * @param styler     the style of the static map
+     */
     public static void drawMap(List<WayPoint> wayPoints, Graphics2D graphics2D, int width, int height, GpxStyler styler) {
         LOGGER.info("Starting to ping tile server...");
         List<Location> locationList = wayPoints.stream()
@@ -33,7 +45,7 @@ public class StaticMapCreator {
         LocationBounds locationBounds = new LocationBounds(locationList);
         StaticMap mp = new StaticMap(width, height);
         TMSLayer baseMap = new TMSLayer(styler.tileProvider().getUrl());
-        mp.fitBounds(locationBounds, new Padding(styler.paddingY(),0, styler.paddingX(), 0));
+        mp.fitBounds(locationBounds, new Padding(styler.paddingY(), 0, styler.paddingX(), 0));
         mp.addLayer(baseMap);
         mp.addLayer(lineString);
         mp.drawInto(graphics2D, new CenterOffset(styler.centerOffsetX(), styler.centerOffsetY()));

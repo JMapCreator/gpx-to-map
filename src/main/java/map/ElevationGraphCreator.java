@@ -12,20 +12,20 @@ import java.awt.*;
 import java.util.List;
 import java.util.stream.IntStream;
 
+/**
+ * Composing and drawing an elevation graph from GPX elevation data
+ */
 public class ElevationGraphCreator {
+    /**
+     * Compose an {@link XYChart} from GPX input data. This chart can be configured using the provided {@link GpxStyler}.
+     *
+     * @param wayPoints list of waypoints read from the GPX file
+     * @param styler    configuration option for the graph
+     * @return a composed {@link XYChart}
+     */
     public static XYChart getElevationGraph(List<WayPoint> wayPoints, GpxStyler styler) {
-        double[] indices = IntStream.range(0, wayPoints.size())
-                .mapToDouble(i -> i)
-                .toArray();
-        double[] alt = wayPoints.stream().mapToDouble(wp -> {
-            Double v = wp.getElevation()
-                    .map(Length::doubleValue)
-                    .orElse(0D);
-            if (v < 0) {
-                return 0;
-            }
-            return v;
-        }).toArray();
+        double[] indices = getIndices(wayPoints);
+        double[] alt = getElevationPoints(wayPoints);
         XYChart chart = new XYChartBuilder().height(500).width(800).build();
         XYSeries altitudeSeries = chart.addSeries("Altitude", indices, alt);
         altitudeSeries.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);
@@ -45,5 +45,29 @@ public class ElevationGraphCreator {
         chart.getStyler().setPlotBorderVisible(false);
         return chart;
 
+    }
+
+    /**
+     * Gets all elevation points. If a point has negative elevation, it will be set to 0, thus avoiding ugly representation on the graph
+     *
+     * @param wayPoints input waypoints from the GPX file
+     * @return an array of elevation points (in meters)
+     */
+    private static double[] getElevationPoints(List<WayPoint> wayPoints) {
+        return wayPoints.stream().mapToDouble(wp -> {
+            Double v = wp.getElevation()
+                    .map(Length::doubleValue)
+                    .orElse(0D);
+            if (v < 0) {
+                return 0;
+            }
+            return v;
+        }).toArray();
+    }
+
+    private static double[] getIndices(List<WayPoint> wayPoints) {
+        return IntStream.range(0, wayPoints.size())
+                .mapToDouble(i -> i)
+                .toArray();
     }
 }
