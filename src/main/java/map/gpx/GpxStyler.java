@@ -17,6 +17,7 @@ import java.awt.*;
  * @param tileProvider          the provider of the tiles (will change the map appearance)
  * @param showStartingPoints    whether the starting point of each track on the GPX file should be shown on the map
  * @param displayElevationGraph whether the elevation should be displayed or not
+ * @param separateFiles         whether the elevation graph and map should be written in separate files
  * @param graphFillColor        color of the graph area
  * @param graphLineColor        color of the graph line
  * @param graphChartPadding     padding around the graph chart
@@ -34,6 +35,7 @@ public record GpxStyler(Color backgroundColor,
                         TileProvider tileProvider,
                         boolean showStartingPoints,
                         boolean displayElevationGraph,
+                        boolean separateFiles,
                         Color graphFillColor,
                         Color graphLineColor,
                         int graphPlotMargin,
@@ -66,6 +68,7 @@ public record GpxStyler(Color backgroundColor,
         private TileProvider tileProvider = TileProvider.ARCGIS_ONLINE;
         private boolean showStartingPoints = false;
         private boolean displayElevationGraph = true;
+        private boolean separateFiles = false;
         private Color graphFillColor = new Color(134, 171, 210, 125);
         private Color graphLineColor = Color.BLACK;
         private int graphPlotMargin = 0;
@@ -73,7 +76,7 @@ public record GpxStyler(Color backgroundColor,
 
         public GpxStyler build() {
             return new GpxStyler(backgroundColor, graphPosition, strokeWidth, strokeColor, outlineColor, centerOffsetX, centerOffsetY,
-                    paddingX, paddingY, tileProvider, showStartingPoints, displayElevationGraph, graphFillColor, graphLineColor,
+                    paddingX, paddingY, tileProvider, showStartingPoints, displayElevationGraph, separateFiles, graphFillColor, graphLineColor,
                     graphPlotMargin, graphChartPadding);
         }
 
@@ -154,6 +157,11 @@ public record GpxStyler(Color backgroundColor,
 
         public builder withGraphChartPadding(int graphChartPadding) {
             this.graphChartPadding = graphChartPadding;
+            return this;
+        }
+
+        public builder withSeparateFiles(boolean separateFiles) {
+            this.separateFiles = separateFiles;
             return this;
         }
     }
